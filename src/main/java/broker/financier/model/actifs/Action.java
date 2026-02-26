@@ -1,0 +1,21 @@
+package broker.financier.model.actifs;
+
+import broker.financier.enums.Devise;
+
+import java.util.Objects;
+
+public class Action extends Actif {
+    public Action(String ticker, String nom, double prixCourant, String pays, Devise devise) {
+        super(ticker, nom, prixCourant, pays, devise);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTicker(), getNom(), getPrixCourant(), getPays(), getDevise());
+    }
+}
