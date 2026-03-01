@@ -1,5 +1,6 @@
 package broker.financier.model.enveloppes;
 
+import broker.financier.exceptions.ActifNonTrouveException;
 import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.achatvente.Position;
 import broker.financier.model.achatvente.Transaction;
@@ -144,17 +145,18 @@ public abstract class Enveloppe {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Actif rechercherActif(String ticker) {
-        if (ticker == null || this.positions.isEmpty()) {
-            System.out.println("Aucun actif dans la liste.");
-            return null;
+    public Actif rechercherActif(String ticker) throws ActifNonTrouveException {
+        if (ticker == null) {
+            throw new ActifNonTrouveException("Le ticker fourni est null.");
         }
-        for (String s : this.positions.keySet()) {
-            if (s.equals(ticker)) {
-                return this.positions.get(s).getActif();
-            }
+        if (this.positions.isEmpty()) {
+            throw new ActifNonTrouveException("Aucune position enregistrée dans l'enveloppe.");
         }
-        return null;
+        Position p = this.positions.get(ticker);
+        if (p == null) {
+            throw new ActifNonTrouveException("Aucun actif trouvé pour le ticker : " + ticker);
+        }
+        return p.getActif();
     }
 
     public void afficherOrdresEnCours() {

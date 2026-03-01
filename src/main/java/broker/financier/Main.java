@@ -4,6 +4,7 @@ import broker.financier.enums.Devise;
 import broker.financier.enums.TypeDistribution;
 import broker.financier.enums.TypeOrdre;
 import broker.financier.enums.TypeReplication;
+import broker.financier.exceptions.ActifNonTrouveException;
 import broker.financier.model.Adresse;
 import broker.financier.model.Client;
 import broker.financier.model.achatvente.Ordre;
@@ -22,7 +23,7 @@ import java.util.List;
 public class Main {
     static void main() {
         //Tests basiques
-        
+
         Adresse adresse1Client1 = new Adresse("5", "Rue des Fleurs", "Appartement 333", "42000", "France");
 
         Client client1 = new Client(1, "JULLIEN", "Mathieu");
@@ -77,9 +78,13 @@ public class Main {
         eclient1.ajouterPosition(pActionAirbus);
         eclient1.ajouterPosition(pEtfCac40);
         eclient1.ajouterPosition(pObligationEtat);
-        System.out.println("Recherche Airbus : " + eclient1.rechercherActif("AIR"));
-        System.out.println("Recherche CAC40 : " + eclient1.rechercherActif("CAC40"));
-        System.out.println("Recherche Etat : " + eclient1.rechercherActif("OAT10"));
+        try {
+            System.out.println("Recherche Airbus : " + eclient1.rechercherActif("AIR"));
+            System.out.println("Recherche CAC40 : " + eclient1.rechercherActif("CAC40"));
+            System.out.println("Recherche Etat : " + eclient1.rechercherActif("OAT10"));
+        } catch (ActifNonTrouveException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
 
         System.out.println("\n=== Test afficherPositions() ===");
         eclient1.afficherPositions();
