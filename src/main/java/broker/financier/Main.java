@@ -90,8 +90,8 @@ public class Main {
         eclient1.afficherPositions();
 
         System.out.println("\n=== Test afficherOrdresEnCours() ===");
-        eclient1.ajouterOrdre(o1);
-        eclient1.ajouterOrdre(o2);
+        eclient1.passerUnOrdre(o1);
+        eclient1.passerUnOrdre(o2);
         eclient1.afficherOrdresEnCours();
 
         System.out.println("\n=== Test afficherTransactions() ===");

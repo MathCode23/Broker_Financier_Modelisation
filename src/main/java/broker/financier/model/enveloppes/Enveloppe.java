@@ -93,7 +93,7 @@ public abstract class Enveloppe {
         this.transactions.add(transaction);
     }
 
-    public void ajouterOrdre(Ordre ordre) {
+    protected void ajouterOrdre(Ordre ordre) {
         this.ordresEnCours.add(ordre);
     }
 
@@ -125,9 +125,7 @@ public abstract class Enveloppe {
         return Objects.hash(getNumero(), getDateOuverte(), getSoldeEspeces(), getFraisDepot(), getTransactions(), getOrdresEnCours(), getPositions());
     }
 
-    public void passerUnOrdrer(Ordre o) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
+    public void passerUnOrdre(Ordre o) {}
 
     public double getValeurTotaleBrute() {
         throw new UnsupportedOperationException("Not implemented yet.");
