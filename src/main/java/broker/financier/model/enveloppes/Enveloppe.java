@@ -128,11 +128,19 @@ public abstract class Enveloppe {
     public void passerUnOrdre(Ordre o) {}
 
     public double getValeurTotaleBrute() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        double valeurTotaleBrute = this.soldeEspeces;
+        for (Position p : positions.values()) {
+            valeurTotaleBrute += p.getValeurCourante();
+        }
+        return valeurTotaleBrute;
     }
 
-    public double getValeurTotaleNet() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public double getValeurTotaleNette() {
+        double valeurTotaleNette = 0.0;
+        for (Position p : positions.values()) {
+            valeurTotaleNette += p.getPlusValeurLatente();
+        }
+        return valeurTotaleNette;
     }
 
     public boolean estActifEligible(Actif actif) {

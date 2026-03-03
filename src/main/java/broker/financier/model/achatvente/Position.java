@@ -7,10 +7,12 @@ import java.util.Objects;
 public class Position implements Valorisable {
     private double quantite;
     private Actif actif;
+    private Transaction transaction;
 
-    public Position(double quantite, Actif actif) {
+    public Position(double quantite, Actif actif, Transaction transaction) {
         this.quantite = quantite;
         this.actif = actif;
+        this.transaction = transaction;
     }
 
     public double getQuantite() {
@@ -29,11 +31,20 @@ public class Position implements Valorisable {
         this.actif = actif;
     }
 
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
     @Override
     public String toString() {
         return "Position{" +
                 "quantite=" + quantite +
                 ", actif=" + actif +
+                ", transaction=" + transaction +
                 '}';
     }
 
@@ -41,21 +52,23 @@ public class Position implements Valorisable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
-        return Double.compare(getQuantite(), position.getQuantite()) == 0 && Objects.equals(getActif(), position.getActif());
+        return Double.compare(getQuantite(), position.getQuantite()) == 0 && Objects.equals(getActif(), position.getActif()) && Objects.equals(getTransaction(), position.getTransaction());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getQuantite(), getActif());
+        return Objects.hash(getQuantite(), getActif(), getTransaction());
     }
 
     @Override
     public double getValeurCourante() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        double valeurCourante = this.quantite * this.actif.getPrixCourant();
+        return valeurCourante;
     }
 
     @Override
-    public double getPlusValueLatente() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public double getPlusValeurLatente() {
+        double valeurLatente = (this.actif.getPrixCourant() - this.transaction.getPrixExecution()) * this.quantite;
+        return valeurLatente;
     }
 }

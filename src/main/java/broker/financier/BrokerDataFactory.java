@@ -46,11 +46,11 @@ public final class BrokerDataFactory {
         Enveloppe pea = new PEA("PEA-AL-001", LocalDateTime.now().minusYears(2), 18000.0, 0.5);
         Enveloppe cto = new CTO("CTO-AL-002", LocalDateTime.now().minusYears(1), 12000.0, 0.4);
 
-        Position pAapl = creerPosition(new Action("AAPL", "Apple Inc.", 192.30, "USA", Devise.USD), 15);
+        Position pAapl = creerPosition(new Action("AAPL", "Apple Inc.", 192.30, "USA", Devise.USD), new Transaction(192, 2880, LocalDateTime.now()),15);
         Position pCw8 = creerPosition(new ETF(
                 "CW8", "Amundi MSCI World", 510.20, "France", Devise.EUR,
-                5500.0, 0.38, TypeDistribution.CAPITALISANT, TypeReplication.SYNTHETIQUE), 20);
-        Position pOat = creerPosition(new Obligation("FRTR10Y", "OAT France 10 ans", 101.40, "France", Devise.EUR, 2.9), 80);
+                5500.0, 0.38, TypeDistribution.CAPITALISANT, TypeReplication.SYNTHETIQUE), new Transaction(510, 10200, LocalDateTime.now()), 20);
+        Position pOat = creerPosition(new Obligation("FRTR10Y", "OAT France 10 ans", 101.40, "France", Devise.EUR, 2.9), new Transaction(100, 8000, LocalDateTime.now()), 80);
 
         pea.ajouterPosition(pCw8);
         pea.ajouterPosition(pOat);
@@ -87,11 +87,11 @@ public final class BrokerDataFactory {
         Enveloppe cto = new CTO("CTO-BR-002", LocalDateTime.now().minusYears(3), 22000.0, 0.45);
         Enveloppe pea = new PEA("PEA-BR-003", LocalDateTime.now().minusYears(2), 14000.0, 0.5);
 
-        Position pMsft = creerPosition(new Action("MSFT", "Microsoft Corp.", 415.80, "USA", Devise.USD), 12);
+        Position pMsft = creerPosition(new Action("MSFT", "Microsoft Corp.", 415.80, "USA", Devise.USD), new Transaction(420, 5040, LocalDateTime.now()) ,12);
         Position pSpy = creerPosition(new ETF(
                 "SPY", "SPDR S&P 500 ETF", 562.10, "USA", Devise.USD,
-                540000.0, 0.09, TypeDistribution.DISTRIBUANT, TypeReplication.PHYSIQUE), 9);
-        Position pUs10y = creerPosition(new Obligation("UST10Y", "US Treasury 10Y", 99.20, "USA", Devise.USD, 4.0), 120);
+                540000.0, 0.09, TypeDistribution.DISTRIBUANT, TypeReplication.PHYSIQUE), new Transaction(565, 5085, LocalDateTime.now()), 9);
+        Position pUs10y = creerPosition(new Obligation("UST10Y", "US Treasury 10Y", 99.20, "USA", Devise.USD, 4.0), new Transaction(100, 1200, LocalDateTime.now()), 120);
 
         av.ajouterPosition(pUs10y);
         cto.ajouterPosition(pMsft);
@@ -126,11 +126,11 @@ public final class BrokerDataFactory {
         Enveloppe cto = new CTO("CTO-CH-001", LocalDateTime.now().minusYears(4), 26000.0, 0.35);
         Enveloppe av = new AssuranceVie("AV-CH-002", LocalDateTime.now().minusYears(2), 30000.0, 0.7);
 
-        Position pNvo = creerPosition(new Action("NVO", "Novo Nordisk", 119.40, "Danemark", Devise.USD), 18);
+        Position pNvo = creerPosition(new Action("NVO", "Novo Nordisk", 119.40, "Danemark", Devise.USD), new Transaction(120, 2160, LocalDateTime.now()),18);
         Position pEunl = creerPosition(new ETF(
                 "EUNL", "iShares Core MSCI World", 96.70, "Irlande", Devise.EUR,
-                82000.0, 0.20, TypeDistribution.CAPITALISANT, TypeReplication.PHYSIQUE), 140);
-        Position pBund = creerPosition(new Obligation("DE10Y", "Bund Allemagne 10Y", 97.80, "Allemagne", Devise.EUR, 2.3), 60);
+                82000.0, 0.20, TypeDistribution.CAPITALISANT, TypeReplication.PHYSIQUE), new Transaction(100, 14000, LocalDateTime.now()), 140);
+        Position pBund = creerPosition(new Obligation("DE10Y", "Bund Allemagne 10Y", 97.80, "Allemagne", Devise.EUR, 2.3), new Transaction(100, 6000, LocalDateTime.now()), 60);
 
         cto.ajouterPosition(pNvo);
         cto.ajouterPosition(pEunl);
@@ -156,8 +156,8 @@ public final class BrokerDataFactory {
         return client;
     }
 
-    private static Position creerPosition(Actif actif, double quantite) {
-        Position position = new Position(quantite, actif);
+    private static Position creerPosition(Actif actif, Transaction transaction, double quantite) {
+        Position position = new Position(quantite, actif, transaction);
         position.setActif(actif);
         return position;
     }
