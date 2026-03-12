@@ -32,10 +32,6 @@ public class Main {
         Actif etfCac40 = new ETF("CAC40", "Lyxor CAC40", 32.50, "France", Devise.EUR, 15000, 32, TypeDistribution.CAPITALISANT, TypeReplication.PHYSIQUE);
         Actif obligationEtat = new Obligation("OAT10", "Obligation État FR", 100.0, "France", Devise.EUR, 10);
 
-        Position pActionAirbus = new Position(10, actionAirbus);
-        Position pEtfCac40 = new Position(20, etfCac40);
-        Position pObligationEtat = new Position(30, obligationEtat);
-
         Enveloppe eclient1 = new PEA("123", LocalDateTime.now(), 1000, 5);
 
         Ordre o1 = new Ordre(100, Devise.EUR, 10, TypeOrdre.ACHAT, LocalDateTime.now(), actionAirbus);
@@ -43,6 +39,10 @@ public class Main {
 
         Transaction t1 = new Transaction(100, 300, LocalDateTime.now());
         Transaction t2 = new Transaction(200, 400, LocalDateTime.now());
+
+        Position pActionAirbus = new Position(10, actionAirbus, t1);
+        Position pEtfCac40 = new Position(20, etfCac40, t1);
+        Position pObligationEtat = new Position(30, obligationEtat, t1);
 
         System.out.println("=== Adresse ===");
         System.out.println(adresse1Client1);
