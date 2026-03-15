@@ -4,7 +4,6 @@ import broker.financier.exceptions.ActifNonEligibleException;
 import broker.financier.exceptions.TransactionFractionneeInvalideException;
 import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.achatvente.Position;
-import broker.financier.model.achatvente.Transaction;
 import broker.financier.model.actifs.Actif;
 import broker.financier.model.actifs.Action;
 import broker.financier.model.enveloppes.Enveloppe;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PEATest {
     @Test
     public void testAchatFractionne() {
-        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000, 5);
+        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000);
         Actif actionAirbus = new Action("AIR", "Airbus", 145.20, "France", Devise.EUR);
         Ordre o = new Ordre(100, Devise.EUR, 1.5, TypeOrdre.ACHAT, LocalDateTime.now(), actionAirbus);
 
@@ -27,7 +26,7 @@ public class PEATest {
 
     @Test
     public void testActifNonEligible() {
-        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000, 5);
+        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000);
         Actif actionAirbus = new Action("AIR", "Airbus", 145.20, "France", Devise.EUR);
         Ordre o = new Ordre(100, Devise.EUR, 1.5, TypeOrdre.ACHAT, LocalDateTime.now(), actionAirbus);
 
@@ -36,14 +35,12 @@ public class PEATest {
 
     @Test
     public void totalValeurBrute() {
-        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000, 5);
+        Enveloppe e = new PEA("123", LocalDateTime.now(), 1000);
         Actif actionAirbus = new Action("AIR", "Airbus", 145.20, "France", Devise.EUR);
-        Ordre o = new Ordre(100, Devise.EUR, 1.5, TypeOrdre.ACHAT, LocalDateTime.now(), actionAirbus);
-        Transaction t = new Transaction(100, 300, LocalDateTime.now());
-        Position pActionAirbus = new Position(10, actionAirbus, t);
+        Position pActionAirbus = new Position(10, actionAirbus, actionAirbus.getPrixCourant());
         e.ajouterPosition(pActionAirbus);
         double valeurTotaleBrute = e.getValeurTotaleBrute();
 
-        assertEquals(10 * 145.20, valeurTotaleBrute);
+        assertEquals(1000 + 10 * 145.20, valeurTotaleBrute);
     }
 }
