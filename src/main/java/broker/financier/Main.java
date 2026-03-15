@@ -23,7 +23,6 @@ import java.util.List;
 public class Main {
     static void main() {
         //Tests basiques
-        /*
         Adresse adresse1Client1 = new Adresse("5", "Rue des Fleurs", "Appartement 333", "42000", "France");
 
         Client client1 = new Client(1, "JULLIEN", "Mathieu");
@@ -98,14 +97,16 @@ public class Main {
         eclient1.ajouterTransaction(t1);
         eclient1.ajouterTransaction(t2);
         eclient1.afficherTransactions();
-         */
 
+        /*
         // Tests complets
         List<Client> clients = BrokerDataFactory.creerClientsFictifs();
 
         for (Client client : clients) {
             afficherClient(client);
         }
+
+         */
     }
 
     private static void afficherClient(Client client) {

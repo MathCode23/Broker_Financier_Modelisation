@@ -1,6 +1,7 @@
 package broker.financier.model.enveloppes;
 
 import broker.financier.enums.TypeOrdre;
+import broker.financier.exceptions.ActifNonEligibleException;
 import broker.financier.exceptions.ActifNonTrouveException;
 import broker.financier.exceptions.SoldeEspeceNonSuffisantException;
 import broker.financier.exceptions.TransactionFractionneeInvalideException;
@@ -101,9 +102,14 @@ public abstract class Enveloppe {
         this.ordresEnCours.add(ordre);
     }
 
-    public void ajouterPosition(Position p) {
-        if (p != null && p.getActif() != null && p.getActif().getTicker() != null) {
-            positions.put(p.getActif().getTicker(), p);
+    public void ajouterPosition(Position position) {
+        if (position != null && position.getActif() != null && position.getActif().getTicker() != null) {
+            if (!estActifEligible(position.getActif())) {
+                throw new ActifNonEligibleException(
+                        "L'actif '" + position.getActif().getTicker() + "' n'est pas eligible pour cette enveloppe."
+                );
+            }
+            positions.put(position.getActif().getTicker(), position);
         }
     }
 
