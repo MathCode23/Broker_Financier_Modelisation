@@ -11,7 +11,13 @@ public class Action extends Actif {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Action{"
+                + "ticker='" + getTicker() + '\''
+                + ", nom='" + getNom() + '\''
+                + ", prixCourant=" + getPrixCourant()
+                + ", pays='" + getPays() + '\''
+                + ", devise=" + getDevise()
+                + '}';
     }
 
     @Override

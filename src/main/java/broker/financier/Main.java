@@ -23,7 +23,7 @@ import java.util.List;
 public class Main {
     static void main() {
         //Tests basiques
-
+        /*
         Adresse adresse1Client1 = new Adresse("5", "Rue des Fleurs", "Appartement 333", "42000", "France");
 
         Client client1 = new Client(1, "JULLIEN", "Mathieu");
@@ -32,17 +32,17 @@ public class Main {
         Actif etfCac40 = new ETF("CAC40", "Lyxor CAC40", 32.50, "France", Devise.EUR, 15000, 32, TypeDistribution.CAPITALISANT, TypeReplication.PHYSIQUE);
         Actif obligationEtat = new Obligation("OAT10", "Obligation État FR", 100.0, "France", Devise.EUR, 10);
 
-        Enveloppe eclient1 = new PEA("123", LocalDateTime.now(), 1000, 5);
+        Enveloppe eclient1 = new PEA("123", LocalDateTime.now(), 1000);
 
         Ordre o1 = new Ordre(100, Devise.EUR, 10, TypeOrdre.ACHAT, LocalDateTime.now(), actionAirbus);
         Ordre o2 = new Ordre(100, Devise.EUR, 10, TypeOrdre.VENTE, LocalDateTime.now(), etfCac40);
 
-        Transaction t1 = new Transaction(100, 300, LocalDateTime.now());
-        Transaction t2 = new Transaction(200, 400, LocalDateTime.now());
+        Transaction t1 = new Transaction("1", 100, 300, LocalDateTime.now());
+        Transaction t2 = new Transaction("2", 200, 400, LocalDateTime.now());
 
-        Position pActionAirbus = new Position(10, actionAirbus, t1);
-        Position pEtfCac40 = new Position(20, etfCac40, t1);
-        Position pObligationEtat = new Position(30, obligationEtat, t1);
+        Position pActionAirbus = new Position(10, actionAirbus, 100);
+        Position pEtfCac40 = new Position(20, etfCac40, 120);
+        Position pObligationEtat = new Position(30, obligationEtat, 50);
 
         System.out.println("=== Adresse ===");
         System.out.println(adresse1Client1);
@@ -98,16 +98,14 @@ public class Main {
         eclient1.ajouterTransaction(t1);
         eclient1.ajouterTransaction(t2);
         eclient1.afficherTransactions();
-
+         */
 
         // Tests complets
-        /*
         List<Client> clients = BrokerDataFactory.creerClientsFictifs();
 
         for (Client client : clients) {
             afficherClient(client);
         }
-        */
     }
 
     private static void afficherClient(Client client) {

@@ -2,16 +2,37 @@ package broker.financier.model.achatvente;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Transaction {
+    private String id;
+    private String tickerActif;
     private double prixExecution;
     private double montantTotal;
     private LocalDateTime dateExecution;
 
-    public Transaction(double prixExecution, double montantTotal, LocalDateTime dateExecution) {
+    public Transaction(String tickerActif, double prixExecution, double montantTotal, LocalDateTime dateExecution) {
+        this.id = UUID.randomUUID().toString();
+        this.tickerActif = tickerActif;
         this.prixExecution = prixExecution;
         this.montantTotal = montantTotal;
         this.dateExecution = dateExecution;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTickerActif() {
+        return tickerActif;
+    }
+
+    public void setTickerActif(String tickerActif) {
+        this.tickerActif = tickerActif;
     }
 
     public double getPrixExecution() {
@@ -39,23 +60,25 @@ public class Transaction {
     }
 
     @Override
-    public String toString() {
-        return "Transaction{" +
-                "prixExecution=" + prixExecution +
-                ", montantTotal=" + montantTotal +
-                ", dateExecution=" + dateExecution +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Double.compare(getPrixExecution(), that.getPrixExecution()) == 0 && Double.compare(getMontantTotal(), that.getMontantTotal()) == 0 && Objects.equals(getDateExecution(), that.getDateExecution());
+        return Double.compare(getPrixExecution(), that.getPrixExecution()) == 0 && Double.compare(getMontantTotal(), that.getMontantTotal()) == 0 && Objects.equals(getId(), that.getId()) && Objects.equals(getTickerActif(), that.getTickerActif()) && Objects.equals(getDateExecution(), that.getDateExecution());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrixExecution(), getMontantTotal(), getDateExecution());
+        return Objects.hash(getId(), getTickerActif(), getPrixExecution(), getMontantTotal(), getDateExecution());
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id='" + id + '\'' +
+                ", tickerActif='" + tickerActif + '\'' +
+                ", prixExecution=" + prixExecution +
+                ", montantTotal=" + montantTotal +
+                ", dateExecution=" + dateExecution +
+                '}';
     }
 }

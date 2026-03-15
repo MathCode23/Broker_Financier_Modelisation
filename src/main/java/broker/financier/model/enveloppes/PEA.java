@@ -1,32 +1,51 @@
 package broker.financier.model.enveloppes;
 
+import broker.financier.enums.TypeOrdre;
 import broker.financier.exceptions.ActifNonEligibleException;
 import broker.financier.exceptions.TransactionFractionneeInvalideException;
 import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.actifs.Actif;
+import broker.financier.model.actifs.Action;
+import broker.financier.model.actifs.ETF;
 
 import java.time.LocalDateTime;
 
 public class PEA extends Enveloppe {
-    public PEA(String numero, LocalDateTime dateOuverte, double soldeEspeces, double fraisDepot) {
-        super(numero, dateOuverte, soldeEspeces, fraisDepot);
+    private static final double TAUX_FISCALITE_AVANT_5_ANS = 0.314;
+    private static final double TAUX_FISCALITE_APRES_5_ANS = 0.186;
+    private static final double FRAIS_DEPOT = 0.0;
+
+    public PEA(String numero, LocalDateTime dateOuverte, double soldeEspeces) {
+        super(numero, dateOuverte, soldeEspeces, FRAIS_DEPOT);
     }
 
     @Override
-    public void passerUnOrdre(Ordre o) throws TransactionFractionneeInvalideException, ActifNonEligibleException {
-        Actif actif = o.getActif();
-        if (!estActifEligible(actif)) {
-            throw new ActifNonEligibleException("Actif non-eligible au PEA : " + actif.getTicker());
+    protected double calculerFiscalite(double plusValueBrute) {
+        if (plusValueBrute <= 0.0) {
+            return 0.0;
         }
-        double quantite = o.getQuantite();
-        if (quantite != Math.floor(quantite)) {
-            throw new TransactionFractionneeInvalideException("Achat fractionné interdit pour l'enveloppe PEA : quantite = " + quantite);
+
+        double taux = getNombreAnneesRevoluesDetention() > 5
+                ? TAUX_FISCALITE_APRES_5_ANS
+                : TAUX_FISCALITE_AVANT_5_ANS;
+        return plusValueBrute * taux;
+    }
+
+    @Override
+    protected void validerOrdre(Ordre ordre) throws TransactionFractionneeInvalideException {
+        if (ordre.getType() == TypeOrdre.ACHAT) {
+            double quantite = ordre.getQuantite();
+            boolean estEntiere = quantite == Math.rint(quantite);
+            if (!estEntiere) {
+                throw new TransactionFractionneeInvalideException(
+                        "Achat fractionne interdit sur PEA pour le ticker '" + ordre.getActif().getTicker() + "'."
+                );
+            }
         }
-        this.ajouterOrdre(o);
     }
 
     @Override
     public boolean estActifEligible(Actif actif) {
-        return true;
+        return actif instanceof Action || actif instanceof ETF;
     }
 }

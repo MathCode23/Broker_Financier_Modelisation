@@ -7,12 +7,12 @@ import java.util.Objects;
 public class Position implements Valorisable {
     private double quantite;
     private Actif actif;
-    private Transaction transaction;
+    private double prixAchatUnitaire;
 
-    public Position(double quantite, Actif actif, Transaction transaction) {
+    public Position(double quantite, Actif actif, double prixAchatUnitaire) {
         this.quantite = quantite;
         this.actif = actif;
-        this.transaction = transaction;
+        this.prixAchatUnitaire = prixAchatUnitaire;
     }
 
     public double getQuantite() {
@@ -31,12 +31,24 @@ public class Position implements Valorisable {
         this.actif = actif;
     }
 
-    public Transaction getTransaction() {
-        return transaction;
+    public double getPrixAchatUnitaire() {
+        return prixAchatUnitaire;
     }
 
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
+    public void setPrixAchatUnitaire(double prixAchatUnitaire) {
+        this.prixAchatUnitaire = prixAchatUnitaire;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return Double.compare(getQuantite(), position.getQuantite()) == 0 && Double.compare(getPrixAchatUnitaire(), position.getPrixAchatUnitaire()) == 0 && Objects.equals(getActif(), position.getActif());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getQuantite(), getActif(), getPrixAchatUnitaire());
     }
 
     @Override
@@ -44,31 +56,25 @@ public class Position implements Valorisable {
         return "Position{" +
                 "quantite=" + quantite +
                 ", actif=" + actif +
-                ", transaction=" + transaction +
+                ", prixAchatUnitaire=" + prixAchatUnitaire +
                 '}';
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Position position = (Position) o;
-        return Double.compare(getQuantite(), position.getQuantite()) == 0 && Objects.equals(getActif(), position.getActif()) && Objects.equals(getTransaction(), position.getTransaction());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getQuantite(), getActif(), getTransaction());
-    }
-
-    @Override
     public double getValeurCourante() {
+        if (actif == null) {
+            return 0.0;
+        }
         double valeurCourante = this.quantite * this.actif.getPrixCourant();
         return valeurCourante;
     }
 
     @Override
-    public double getPlusValeurLatente() {
-        double valeurLatente = (this.actif.getPrixCourant() - this.transaction.getPrixExecution()) * this.quantite;
+    public double getPlusValueLatente() {
+        if (actif == null || prixAchatUnitaire <= 0) {
+            return 0.0;
+        }
+        double valeurLatente = (this.actif.getPrixCourant() - this.prixAchatUnitaire) * this.quantite;
         return valeurLatente;
     }
 }

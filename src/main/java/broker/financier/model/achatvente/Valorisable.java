@@ -2,5 +2,5 @@ package broker.financier.model.achatvente;
 
 public interface Valorisable {
     double getValeurCourante();
-    double getPlusValeurLatente();
+    double getPlusValueLatente();
 }

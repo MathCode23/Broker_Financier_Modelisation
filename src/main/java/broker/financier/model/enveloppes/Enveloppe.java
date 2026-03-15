@@ -1,12 +1,16 @@
 package broker.financier.model.enveloppes;
 
+import broker.financier.enums.TypeOrdre;
 import broker.financier.exceptions.ActifNonTrouveException;
+import broker.financier.exceptions.SoldeEspeceNonSuffisantException;
+import broker.financier.exceptions.TransactionFractionneeInvalideException;
 import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.achatvente.Position;
 import broker.financier.model.achatvente.Transaction;
 import broker.financier.model.actifs.Actif;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public abstract class Enveloppe {
@@ -125,7 +129,108 @@ public abstract class Enveloppe {
         return Objects.hash(getNumero(), getDateOuverte(), getSoldeEspeces(), getFraisDepot(), getTransactions(), getOrdresEnCours(), getPositions());
     }
 
-    public void passerUnOrdre(Ordre o) {}
+    public void passerUnOrdre(Ordre ordre)
+            throws TransactionFractionneeInvalideException, SoldeEspeceNonSuffisantException {
+        // 1) Validation des préconditions.
+        if (ordre == null) {
+            throw new IllegalArgumentException("L'ordre ne peut pas etre null.");
+        }
+        if (ordre.getActif() == null || ordre.getActif().getTicker() == null || ordre.getActif().getTicker().isBlank()) {
+            throw new IllegalArgumentException("L'ordre doit contenir un actif avec un ticker valide.");
+        }
+        if (ordre.getType() == null) {
+            throw new IllegalArgumentException("Le type d'ordre est obligatoire.");
+        }
+        if (ordre.getQuantite() <= 0.0) {
+            throw new IllegalArgumentException("La quantite d'ordre doit etre strictement positive.");
+        }
+        if (ordre.getPrixMinMax() <= 0.0) {
+            throw new IllegalArgumentException("Le prix d'execution doit etre strictement positif.");
+        }
+
+        // 2) Vérification des espèces disponibles pour un achat.
+        // Les espèces disponibles = solde espèces - espèces déjà engagées par les autres ordres d'achat en cours.
+        if (ordre.getType() == TypeOrdre.ACHAT) {
+            double especesDejaEngagees = calculerEspecesDejaEngagees(ordre);
+            double especesDisponibles = soldeEspeces - especesDejaEngagees;
+            double montantOrdre = ordre.getPrixMinMax() * ordre.getQuantite();
+            if (montantOrdre > especesDisponibles) {
+                throw new SoldeEspeceNonSuffisantException(
+                        "Solde especes insuffisant. Disponible=" + especesDisponibles + ", requis=" + montantOrdre + "."
+                );
+            }
+        }
+
+        // 3) Application des règles spécifiques de l'enveloppe (ex: achat fractionné PEA).
+        validerOrdre(ordre);
+
+        // 4) Exécution de l'ordre: création/mise à jour position, mouvement espèces, traçabilité transaction.
+        String ticker = ordre.getActif().getTicker();
+        double quantite = ordre.getQuantite();
+        double montant = ordre.getPrixMinMax() * quantite;
+        Position positionExistante = positions.get(ticker);
+
+        if (ordre.getType() == TypeOrdre.ACHAT) {
+            // 4a) Achat: on augmente la position et on débite le solde espèces.
+            if (positionExistante == null) {
+                positionExistante = new Position(quantite, null, ordre.getPrixMinMax());
+                positionExistante.setActif(ordre.getActif());
+                positions.put(ticker, positionExistante);
+            } else {
+                double ancienneQuantite = positionExistante.getQuantite();
+                double nouvelleQuantite = ancienneQuantite + quantite;
+
+                // Maintient un prix d'achat moyen pour alimenter les calculs de plus-value latente.
+                if (nouvelleQuantite > 0.0) {
+                    double ancienPrixAchat = positionExistante.getPrixAchatUnitaire();
+                    double nouveauPrixAchat = ((ancienPrixAchat * ancienneQuantite) + (ordre.getPrixMinMax() * quantite))
+                            / nouvelleQuantite;
+                    positionExistante.setPrixAchatUnitaire(nouveauPrixAchat);
+                }
+                positionExistante.setQuantite(nouvelleQuantite);
+                positionExistante.setActif(ordre.getActif());
+            }
+            soldeEspeces -= montant;
+            ajouterTransaction(new Transaction(ticker, ordre.getPrixMinMax(), montant, LocalDateTime.now()));
+        } else {
+            // 4b) Vente: on diminue la position et on crédite le solde espèces.
+            if (positionExistante == null || positionExistante.getQuantite() < quantite) {
+                throw new IllegalStateException("Quantite insuffisante pour vendre l'actif '" + ticker + "'.");
+            }
+            double nouvelleQuantite = positionExistante.getQuantite() - quantite;
+            if (nouvelleQuantite == 0.0) {
+                positions.remove(ticker);
+            } else {
+                positionExistante.setQuantite(nouvelleQuantite);
+            }
+            soldeEspeces += montant;
+            ajouterTransaction(new Transaction(ticker, -ordre.getPrixMinMax(), -montant, LocalDateTime.now()));
+        }
+
+        // 5) L'ordre est exécuté, il est retiré des ordres en cours.
+        ordresEnCours.remove(ordre);
+    }
+
+    protected void validerOrdre(Ordre ordre) throws TransactionFractionneeInvalideException {
+        // Hook surchargeable par les enveloppes qui appliquent des contraintes particulières.
+        // On illustre ici la limite d'une classe asbtraite par rapport à une interface : rien n'oblige
+        // une enveloppe (CTO, PEA, ...) à surcharger cette méthode et donc on peut arriver à coder
+        // une nouvelle enveloppe en oubliant de traiter ce comportement (certes on peut aussi coder une
+        // en faisant exprès de ne pas surcharger cette méthode si l'enveloppe n'a pas de restriction.
+        // Une alerte cognitive à mettre en place : Comportement => interface !
+    }
+
+    private double calculerEspecesDejaEngagees(Ordre ordreAExclure) {
+        double especesDejaEngagees = 0.0;
+        for (Ordre ordreEnAttente : ordresEnCours) {
+            boolean ordreAchat = ordreEnAttente.getType() == TypeOrdre.ACHAT;
+            boolean ordreDifferent = ordreAExclure == null || !ordreEnAttente.equals(ordreAExclure);
+            if (ordreAchat && ordreDifferent) {
+                especesDejaEngagees += ordreEnAttente.getQuantite() * ordreEnAttente.getPrixMinMax();
+            }
+        }
+        return especesDejaEngagees;
+    }
 
     public double getValeurTotaleBrute() {
         double valeurTotaleBrute = this.soldeEspeces;
@@ -136,19 +241,98 @@ public abstract class Enveloppe {
     }
 
     public double getValeurTotaleNette() {
-        double valeurTotaleNette = 0.0;
-        for (Position p : positions.values()) {
-            valeurTotaleNette += p.getPlusValeurLatente();
+        double plusValueBruteTotale = getPlusValueLatenteBruteTotale();
+        if (plusValueBruteTotale <= 0.0) {
+            return plusValueBruteTotale;
         }
-        return valeurTotaleNette;
+        double fiscalite = calculerFiscalite(plusValueBruteTotale);
+        return plusValueBruteTotale - fiscalite;
     }
 
     public boolean estActifEligible(Actif actif) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return actif != null;
     }
 
-    public double calculerFiscalite() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    protected abstract double calculerFiscalite(double plusValueBrute);
+
+    protected long getNombreAnneesRevoluesDetention() {
+        if (dateOuverte == null) {
+            return 0L;
+        }
+        long annees = ChronoUnit.YEARS.between(dateOuverte.toLocalDate(), LocalDateTime.now().toLocalDate());
+        return Math.max(0L, annees);
+    }
+
+    private double getPlusValueLatenteBruteTotale() {
+        if (!transactions.isEmpty()) {
+            Map<String, Double> prixAchatParTicker = new HashMap<>();
+            Map<String, Double> prixVenteParTicker = new HashMap<>();
+            Set<String> tickersActifsVendus = new HashSet<>();
+            double montantTotalInvesti = 0.0;
+
+            // 1) On indexe les transactions par ticker pour détecter les paires achat/vente.
+            // Une transaction sans ticker est conservée dans le montant investi "générique".
+            for (Transaction transaction : transactions) {
+                String ticker = transaction.getTickerActif();
+                if (ticker == null || ticker.isBlank()) {
+                    montantTotalInvesti += transaction.getMontantTotal();
+                } else {
+                    double prixExecution = transaction.getPrixExecution();
+                    if (prixExecution > 0.0) {
+                        prixAchatParTicker.put(ticker, prixExecution);
+                    } else if (prixExecution < 0.0) {
+                        prixVenteParTicker.put(ticker, prixExecution);
+                    }
+                }
+            }
+
+            // 2) On reconstruit le montant investi à partir des seules lignes non revendues.
+            // Si achat+vente existent pour un ticker, l'actif est considéré soldé.
+            for (Transaction transaction : transactions) {
+                String ticker = transaction.getTickerActif();
+                if (ticker != null && !ticker.isBlank()) {
+                    boolean actifVendu =
+                            prixAchatParTicker.containsKey(ticker)
+                                    && prixVenteParTicker.containsKey(ticker);
+                    if (actifVendu) {
+                        tickersActifsVendus.add(ticker);
+                    } else {
+                        montantTotalInvesti += transaction.getMontantTotal();
+                    }
+                }
+            }
+
+            // 3) Valeur courante des positions encore détenues (on retire les actifs vendus).
+            double valeurCouranteTotale = 0.0;
+            for (Position position : positions.values()) {
+                boolean actifDefini = position.getActif() != null;
+                if (actifDefini) {
+                    String ticker = position.getActif().getTicker();
+                    if (!tickersActifsVendus.contains(ticker)) {
+                        valeurCouranteTotale += position.getValeurCourante();
+                    }
+                }
+            }
+
+            // 4) Pour les actifs vendus: PV/MV = prix de vente - prix d'achat.
+            // Le prix de vente est stocké négatif dans le modèle, d'où la valeur absolue.
+            double plusValueActifsVendus = 0.0;
+            for (String ticker : tickersActifsVendus) {
+                double prixAchat = prixAchatParTicker.get(ticker);
+                double prixVente = prixVenteParTicker.get(ticker);
+                plusValueActifsVendus += Math.abs(prixVente) - prixAchat;
+            }
+
+            // 5) PV/MV brute totale = PV/MV du portefeuille encore ouvert + PV/MV des lignes soldées.
+            return (valeurCouranteTotale - montantTotalInvesti) + plusValueActifsVendus;
+        }
+
+        // Fallback quand aucune transaction n'est disponible: on somme les PV latentes des positions.
+        double plusValueLatenteTotale = 0.0;
+        for (Position position : positions.values()) {
+            plusValueLatenteTotale += position.getPlusValueLatente();
+        }
+        return plusValueLatenteTotale;
     }
 
     public Actif rechercherActif(String ticker) throws ActifNonTrouveException {

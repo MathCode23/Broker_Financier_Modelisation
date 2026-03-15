@@ -54,12 +54,17 @@ public class ETF extends Actif {
 
     @Override
     public String toString() {
-        return "ETF{" +
-                "tailleFondsM=" + tailleFondsM +
-                ", pourcentageFrais=" + pourcentageFrais +
-                ", typeDistribution=" + typeDistribution +
-                ", typeReplication=" + typeReplication +
-                '}' + " " + super.toString();
+        return "ETF{"
+                + "ticker='" + getTicker() + '\''
+                + ", nom='" + getNom() + '\''
+                + ", prixCourant=" + getPrixCourant()
+                + ", pays='" + getPays() + '\''
+                + ", devise=" + getDevise()
+                + ", tailleFondsM=" + tailleFondsM
+                + ", typeDistribution=" + typeDistribution
+                + ", pourcentageFrais=" + pourcentageFrais
+                + ", typeReplication=" + typeReplication
+                + '}';
     }
 
     @Override
