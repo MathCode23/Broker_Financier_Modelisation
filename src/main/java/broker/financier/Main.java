@@ -98,6 +98,17 @@ public class Main {
         eclient1.ajouterTransaction(t2);
         eclient1.afficherTransactions();
 
+        System.out.println("\n=== Tests afficherPositionsLambda() ===");
+        eclient1.afficherPositionsLambda();
+
+        System.out.println("\n=== Test getValeurTotaleBruteLambda() ===");
+        System.out.println("Valeur totale brute de l'enveloppe (sans lambda) " + eclient1.getNumero() + " : " + eclient1.getValeurTotaleBrute());
+        System.out.println("Valeur totale brute de l'enveloppe (avec lambda) " + eclient1.getNumero() + " : " + eclient1.getValeurTotaleBruteLambda());
+
+        System.out.println("\n=== Tests afficherPositionsImportantes() ===");
+        eclient1.afficherPositionsImportantes();
+        List<Position> positionsImportantes = eclient1.PositionsImportantes();
+
         /*
         // Tests complets
         List<Client> clients = BrokerDataFactory.creerClientsFictifs();

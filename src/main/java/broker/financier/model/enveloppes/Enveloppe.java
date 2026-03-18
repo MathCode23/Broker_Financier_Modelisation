@@ -13,6 +13,7 @@ import broker.financier.model.actifs.Actif;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class Enveloppe {
     private String numero;
@@ -388,5 +389,53 @@ public abstract class Enveloppe {
             Position p = entry.getValue();
             System.out.println(" - " + ticker + " : " + p);
         }
+    }
+
+    public void afficherPositionsLambda() {
+        System.out.println("Positions détenues dans l'enveloppe  " + this.numero + " :");
+        if (this.positions.isEmpty()) {
+            System.out.println("Aucune position enregistrée.");
+            return;
+        }
+        this.positions.forEach((ticker, p) -> System.out.println(" - " + ticker + " : " + p));
+    }
+
+    public double getValeurTotaleBruteLambda() {
+        double valeurCourante = this.soldeEspeces;
+        double sumValeurCourante = this.positions.values()
+                .stream()
+                .mapToDouble(Position::getValeurCourante)
+                .sum();
+        valeurCourante += sumValeurCourante;
+        return valeurCourante;
+    }
+
+    public void afficherPositionsImportantes() {
+        double valeurBrute = this.getValeurTotaleBruteLambda();
+        double seuil = 0.05 * valeurBrute;
+        System.out.println("Positions importantes de l'enveloppe " + this.numero + " :");
+        this.positions.values()
+                .stream()
+                .filter(p -> p.getValeurCourante() > seuil)
+                .forEach(System.out::println);
+    }
+
+    public List<Position> PositionsImportantes() {
+        double valeurBrute = this.getValeurTotaleBruteLambda();
+        double seuil = 0.05 * valeurBrute;
+        System.out.println("Positions importantes de l'enveloppe " + this.numero + " :");
+        List<Position> positionsImportantes = this.positions.values()
+                .stream()
+                .filter(p -> p.getValeurCourante() > seuil)
+                .collect(Collectors.toList());
+        positionsImportantes.forEach(p -> System.out.println(" - " + p));
+        return positionsImportantes;
+    }
+
+    public void afficherPositionsParPays(String pays) {
+        positions.values()
+                .stream()
+                .filter(p -> p.getActif().getPays().equals(pays))
+                .forEach(System.out::println);
     }
 }

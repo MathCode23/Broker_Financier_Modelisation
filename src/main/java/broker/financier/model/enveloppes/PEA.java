@@ -7,6 +7,7 @@ import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.actifs.Actif;
 import broker.financier.model.actifs.Action;
 import broker.financier.model.actifs.ETF;
+import broker.financier.model.actifs.Obligation;
 
 import java.time.LocalDateTime;
 
@@ -46,6 +47,6 @@ public class PEA extends Enveloppe {
 
     @Override
     public boolean estActifEligible(Actif actif) {
-        return actif instanceof Action || actif instanceof ETF;
+        return actif instanceof Action || actif instanceof ETF || actif instanceof Obligation;
     }
 }
