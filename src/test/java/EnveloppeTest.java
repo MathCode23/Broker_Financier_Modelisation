@@ -12,7 +12,11 @@ import broker.financier.model.enveloppes.Enveloppe;
 import broker.financier.model.enveloppes.PEA;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,9 +105,93 @@ public class EnveloppeTest {
         }
     }
 
+    @Test
+    void afficherPositionsParPays_afficheUniquementLesPositionsDuPaysDansLOrdreDInsertion() {
+        Enveloppe enveloppe = new CTO("CTO-T-005", LocalDateTime.now(), 1_000.0);
+        Position airbus = creerPosition(new Action("AIR", "Airbus", 100.0, "France", Devise.EUR), 2.0);
+        Position apple = creerPosition(new Action("AAPL", "Apple", 190.0, "USA", Devise.USD), 3.0);
+        Position orange = creerPosition(new Action("ORA", "Orange", 50.0, "France", Devise.EUR), 5.0);
+        enveloppe.ajouterPosition(airbus);
+        enveloppe.ajouterPosition(apple);
+        enveloppe.ajouterPosition(orange);
+
+        String sortie = capturerSortieStandard(() -> enveloppe.afficherPositionsParPays("France"));
+
+        assertEquals(
+                List.of(airbus.toString(), orange.toString()),
+                lignes(sortie)
+        );
+    }
+
+    @Test
+    void afficherPositionsParPays_quandAucunePositionNeCorrespond_neRienAffiche() {
+        Enveloppe enveloppe = new CTO("CTO-T-006", LocalDateTime.now(), 1_000.0);
+        enveloppe.ajouterPosition(creerPosition(new Action("AAPL", "Apple", 190.0, "USA", Devise.USD), 3.0));
+        enveloppe.ajouterPosition(creerPosition(new Action("SAP", "SAP", 240.0, "Allemagne", Devise.EUR), 2.0));
+
+        String sortie = capturerSortieStandard(() -> enveloppe.afficherPositionsParPays("France"));
+
+        assertEquals(List.of(), lignes(sortie));
+    }
+
+    @Test
+    void afficherPositionsParPays_quandEnveloppeEstVide_neRienAffiche() {
+        Enveloppe enveloppe = new CTO("CTO-T-007", LocalDateTime.now(), 1_000.0);
+
+        String sortie = capturerSortieStandard(() -> enveloppe.afficherPositionsParPays("France"));
+
+        assertEquals("", sortie);
+    }
+
+    @Test
+    void afficherPositionsParPays_avecPaysNull_neRienAffiche() {
+        Enveloppe enveloppe = new CTO("CTO-T-008", LocalDateTime.now(), 1_000.0);
+        enveloppe.ajouterPosition(creerPosition(new Action("AIR", "Airbus", 100.0, "France", Devise.EUR), 2.0));
+
+        String sortie = capturerSortieStandard(() -> enveloppe.afficherPositionsParPays(null));
+
+        assertEquals(List.of(), lignes(sortie));
+    }
+
+    @Test
+    void afficherPositionsParPays_comparaisonExacteRespecteLaCasse() {
+        Enveloppe enveloppe = new CTO("CTO-T-009", LocalDateTime.now(), 1_000.0);
+        enveloppe.ajouterPosition(creerPosition(new Action("AIR", "Airbus", 100.0, "France", Devise.EUR), 2.0));
+
+        String sortie = capturerSortieStandard(() -> enveloppe.afficherPositionsParPays("france"));
+
+        assertEquals(List.of(), lignes(sortie));
+    }
+
     private static Position creerPosition(Actif actif, double quantite) {
         Position position = new Position(quantite, actif, actif.getPrixCourant());
         position.setActif(actif);
         return position;
+    }
+
+    private String capturerSortieStandard(Runnable action) {
+        // On conserve la vraie sortie standard pour la restaurer apres le test.
+        PrintStream sortieOriginale = System.out;
+
+        // Ce tampon memoire remplace temporairement la console.
+        ByteArrayOutputStream tampon = new ByteArrayOutputStream();
+
+        try {
+            // Tout ce qui sera ecrit sur System.out ira dans le tampon.
+            System.setOut(new PrintStream(tampon, true, StandardCharsets.UTF_8));
+
+            // On execute la methode a tester.
+            action.run();
+        } finally {
+            // On restaure System.out meme si le test echoue.
+            System.setOut(sortieOriginale);
+        }
+
+        // On retourne tout ce qui a ete affiche, sous forme de texte.
+        return tampon.toString(StandardCharsets.UTF_8);
+    }
+
+    private List<String> lignes(String sortie) {
+        return sortie.lines().toList();
     }
 }

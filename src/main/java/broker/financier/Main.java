@@ -29,7 +29,7 @@ public class Main {
 
         Actif actionAirbus = new Action("AIR", "Airbus", 145.20, "France", Devise.EUR);
         Actif etfCac40 = new ETF("CAC40", "Lyxor CAC40", 32.50, "France", Devise.EUR, 15000, 32, TypeDistribution.CAPITALISANT, TypeReplication.PHYSIQUE);
-        Actif obligationEtat = new Obligation("OAT10", "Obligation État FR", 100.0, "France", Devise.EUR, 10);
+        Actif obligationEtat = new Obligation("OAT10", "Obligation État USA", 100.0, "USA", Devise.EUR, 10);
 
         Enveloppe eclient1 = new PEA("123", LocalDateTime.now(), 1000);
 
@@ -107,21 +107,27 @@ public class Main {
 
         System.out.println("\n=== Tests afficherPositionsImportantes() ===");
         eclient1.afficherPositionsImportantes();
-        List<Position> positionsImportantes = eclient1.PositionsImportantes();
+        List<Position> positionsImportantes = eclient1.getPositionsImportantes();
+        positionsImportantes.forEach(System.out::println);
 
-        /*
+        System.out.println("\n=== Tests afficherPositionsParPays(pays) ===");
+        List<Position> positionsFrance = eclient1.lesPositionsParPays("France");
+        positionsFrance.forEach(System.out::println);
+        eclient1.afficherPositionsParPays("France");
+
+        System.out.println("\n=== Tests afficherAnalysePortefeuille() ===");
+        eclient1.afficherAnalysePortefeuille();
+
         // Tests complets
         List<Client> clients = BrokerDataFactory.creerClientsFictifs();
 
         for (Client client : clients) {
             afficherClient(client);
         }
-
-         */
     }
 
     private static void afficherClient(Client client) {
-        System.out.println("==============================================");
+        System.out.println("\n\n\n==============================================");
         System.out.println("Client #" + client.getId() + " - " + client.getPrenom() + " " + client.getNom());
         System.out.println("Adresses:");
         for (Adresse adresse : client.getAdresses()) {
@@ -141,6 +147,11 @@ public class Main {
             for (Ordre ordre : enveloppe.getOrdresEnCours()) {
                 System.out.println("      - " + ordre);
             }
+        }
+
+        System.out.println("\nAnalyse du portefeuille :");
+        for (Enveloppe enveloppe : client.getEnveloppes()) {
+            enveloppe.afficherAnalysePortefeuille();
         }
     }
 }

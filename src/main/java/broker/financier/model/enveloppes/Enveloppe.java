@@ -218,6 +218,24 @@ public abstract class Enveloppe {
         ordresEnCours.remove(ordre);
     }
 
+    private static void checkOrdreArguments(Ordre ordre) {
+        if (ordre == null) {
+            throw new IllegalArgumentException("L'ordre ne peut pas etre null.");
+        }
+        if (ordre.getActif() == null || ordre.getActif().getTicker() == null || ordre.getActif().getTicker().isBlank()) {
+            throw new IllegalArgumentException("L'ordre doit contenir un actif avec un ticker valide.");
+        }
+        if (ordre.getType() == null) {
+            throw new IllegalArgumentException("Le type d'ordre est obligatoire.");
+        }
+        if (ordre.getQuantite() <= 0.0) {
+            throw new IllegalArgumentException("La quantite d'ordre doit etre strictement positive.");
+        }
+        if (ordre.getPrixMinMax() <= 0.0) {
+            throw new IllegalArgumentException("Le prix d'execution doit etre strictement positif.");
+        }
+    }
+
     protected void validerOrdre(Ordre ordre) throws TransactionFractionneeInvalideException {
         // Hook surchargeable par les enveloppes qui appliquent des contraintes particulières.
         // On illustre ici la limite d'une classe asbtraite par rapport à une interface : rien n'oblige
@@ -417,18 +435,16 @@ public abstract class Enveloppe {
         this.positions.values()
                 .stream()
                 .filter(p -> p.getValeurCourante() > seuil)
-                .forEach(System.out::println);
+                .forEach(p -> System.out.println(" - " + p));
     }
 
-    public List<Position> PositionsImportantes() {
+    public List<Position> getPositionsImportantes() {
         double valeurBrute = this.getValeurTotaleBruteLambda();
         double seuil = 0.05 * valeurBrute;
-        System.out.println("Positions importantes de l'enveloppe " + this.numero + " :");
         List<Position> positionsImportantes = this.positions.values()
                 .stream()
                 .filter(p -> p.getValeurCourante() > seuil)
                 .collect(Collectors.toList());
-        positionsImportantes.forEach(p -> System.out.println(" - " + p));
         return positionsImportantes;
     }
 
@@ -437,5 +453,31 @@ public abstract class Enveloppe {
                 .stream()
                 .filter(p -> p.getActif().getPays().equals(pays))
                 .forEach(System.out::println);
+    }
+
+    public List<Position> lesPositionsParPays(String pays) {
+        List<Position> resultats = this.positions.values()
+                .stream()
+                .filter(p -> p.getActif().getPays().equals(pays))
+                .collect(Collectors.toList());
+        return resultats;
+    }
+
+    private void afficherBlocAnalyse(String titre, List<Position> positions) {
+        if (positions.size() > 0) {
+            System.out.println("\n" + titre + " :");
+            positions.forEach(System.out::println);
+        }
+    }
+
+    public void afficherAnalysePortefeuille() {
+        System.out.println("Analyse du portefeuille n°" + this.numero);
+        System.out.println("Valeur totale brute : " + this.getValeurTotaleBruteLambda());
+        System.out.println("Nombres de positions : " + this.positions.size());
+        System.out.println("Plus/Moins value latente : " + this.getPlusValueLatenteBruteTotale());
+
+        afficherBlocAnalyse("Positions importantes", getPositionsImportantes());
+        afficherBlocAnalyse("Positions françaises", lesPositionsParPays("France"));
+        afficherBlocAnalyse("Positions américaines", lesPositionsParPays("USA"));
     }
 }
