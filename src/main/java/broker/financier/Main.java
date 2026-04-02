@@ -16,13 +16,17 @@ import broker.financier.model.actifs.ETF;
 import broker.financier.model.actifs.Obligation;
 import broker.financier.model.enveloppes.Enveloppe;
 import broker.financier.model.enveloppes.PEA;
+import broker.financier.persistance.ActionRepository;
+import broker.financier.persistance.JsonActionRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
     static void main() {
-        //Tests basiques
+        // ==========================================================
+        // TESTS BASIQUES
+        // ==========================================================
         Adresse adresse1Client1 = new Adresse("5", "Rue des Fleurs", "Appartement 333", "42000", "France");
 
         Client client1 = new Client(1, "JULLIEN", "Mathieu");
@@ -65,15 +69,15 @@ public class Main {
         System.out.println("etfCac40 instanceof ETF : " + (etfCac40 instanceof ETF));
         System.out.println("obligationEtat instanceof Action : " + (obligationEtat instanceof Action));
 
-        System.out.println("\n=== Test afficherAdresses() ===");
+        System.out.println("\n=== Test Client afficherAdresses ===");
         client1.ajouterAdresse(adresse1Client1);
         client1.afficherAdresses();
 
-        System.out.println("\n=== Test afficherEnveloppes() ===");
+        System.out.println("\n=== Test Client afficherEnveloppes ===");
         client1.ajouterEnveloppe(eclient1);
         client1.afficherEnveloppes();
 
-        System.out.println("\n=== Test rechercherActif(String ticker) ===");
+        System.out.println("\n=== Test Enveloppe rechercherActif ===");
         eclient1.ajouterPosition(pActionAirbus);
         eclient1.ajouterPosition(pEtfCac40);
         eclient1.ajouterPosition(pObligationEtat);
@@ -85,40 +89,49 @@ public class Main {
             System.out.println("Erreur : " + e.getMessage());
         }
 
-        System.out.println("\n=== Test afficherPositions() ===");
+        System.out.println("\n=== Test Enveloppe afficherPositions ===");
         eclient1.afficherPositions();
 
-        System.out.println("\n=== Test afficherOrdresEnCours() ===");
+        System.out.println("\n=== Test Enveloppe afficherOrdresEnCours ===");
         eclient1.passerUnOrdre(o1);
         eclient1.passerUnOrdre(o2);
         eclient1.afficherOrdresEnCours();
 
-        System.out.println("\n=== Test afficherTransactions() ===");
+        System.out.println("\n=== Test Enveloppe afficherTransactions ===");
         eclient1.ajouterTransaction(t1);
         eclient1.ajouterTransaction(t2);
         eclient1.afficherTransactions();
 
-        System.out.println("\n=== Tests afficherPositionsLambda() ===");
+        System.out.println("\n=== Test Enveloppe afficherPositionsLambda ===");
         eclient1.afficherPositionsLambda();
 
-        System.out.println("\n=== Test getValeurTotaleBruteLambda() ===");
+        System.out.println("\n=== Test Enveloppe getValeurTotaleBruteLambda() ===");
         System.out.println("Valeur totale brute de l'enveloppe (sans lambda) " + eclient1.getNumero() + " : " + eclient1.getValeurTotaleBrute());
         System.out.println("Valeur totale brute de l'enveloppe (avec lambda) " + eclient1.getNumero() + " : " + eclient1.getValeurTotaleBruteLambda());
 
-        System.out.println("\n=== Tests afficherPositionsImportantes() ===");
+        System.out.println("\n=== Test Enveloppe afficherPositionsImportantes ===");
         eclient1.afficherPositionsImportantes();
         List<Position> positionsImportantes = eclient1.getPositionsImportantes();
         positionsImportantes.forEach(System.out::println);
 
-        System.out.println("\n=== Tests afficherPositionsParPays(pays) ===");
+        System.out.println("\n=== Test Enveloppe afficherPositionsParPays ===");
         List<Position> positionsFrance = eclient1.lesPositionsParPays("France");
         positionsFrance.forEach(System.out::println);
         eclient1.afficherPositionsParPays("France");
 
-        System.out.println("\n=== Tests afficherAnalysePortefeuille() ===");
+        System.out.println("\n=== Test Enveloppe afficherAnalysePortefeuille ===");
         eclient1.afficherAnalysePortefeuille();
 
-        // Tests complets
+        System.out.println("\n=== Test JsonActionRepository sauvegarder/charger ===");
+        ActionRepository repoAction = new JsonActionRepository();
+        repoAction.sauvegarder((Action) actionAirbus);
+        System.out.println("Action sauvegardée dans le fichier action.js");
+        Action actionAirbus3 = repoAction.charger();
+        System.out.println("Action chargée dans le fichier action.js : \n" + actionAirbus3);
+
+        // ==========================================================
+        // TESTS COMPLETS
+        // ==========================================================
         List<Client> clients = BrokerDataFactory.creerClientsFictifs();
 
         for (Client client : clients) {

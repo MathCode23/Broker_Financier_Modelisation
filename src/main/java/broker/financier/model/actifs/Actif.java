@@ -11,6 +11,9 @@ public abstract class Actif implements Vendable {
     private String pays;
     private Devise devise;
 
+    public Actif() {
+    }
+
     public Actif(String ticker, String nom, double prixCourant, String pays, Devise devise) {
         this.ticker = ticker;
         this.nom = nom;

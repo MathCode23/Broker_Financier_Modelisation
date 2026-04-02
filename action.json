@@ -1,0 +1,7 @@
+{
+  "devise" : "EUR",
+  "nom" : "Airbus",
+  "pays" : "France",
+  "prixCourant" : 145.2,
+  "ticker" : "AIR"
+}
