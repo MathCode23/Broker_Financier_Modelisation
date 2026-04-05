@@ -1,0 +1,7 @@
+{
+  "ticker" : "AAPL",
+  "nom" : "Apple",
+  "prixCourant" : 190.0,
+  "pays" : "USA",
+  "devise" : "USD"
+}

@@ -5,7 +5,9 @@ import broker.financier.enums.Devise;
 import java.util.Objects;
 
 public class Action extends Actif {
+
     public Action() {
+        super();
     }
 
     public Action(String ticker, String nom, double prixCourant, String pays, Devise devise) {

@@ -1,9 +1,11 @@
 package broker.financier.model.actifs;
 
 import broker.financier.enums.Devise;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Objects;
 
+@JsonPropertyOrder({ "ticker", "nom", "prixCourant", "pays", "devise" })
 public abstract class Actif implements Vendable {
     private String ticker;
     private String nom;
@@ -12,6 +14,7 @@ public abstract class Actif implements Vendable {
     private Devise devise;
 
     public Actif() {
+
     }
 
     public Actif(String ticker, String nom, double prixCourant, String pays, Devise devise) {
