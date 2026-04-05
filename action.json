@@ -1,7 +1,7 @@
 {
-  "ticker" : "AIR",
-  "nom" : "Airbus",
-  "prixCourant" : 145.2,
-  "pays" : "France",
-  "devise" : "EUR"
+  "ticker": "AIR",
+  "nom": "Airbus",
+  "prixCourant": 145.20,
+  "pays": "France",
+  "devise": "EUR"
 }
