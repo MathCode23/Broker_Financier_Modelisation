@@ -139,6 +139,14 @@ public class Main {
         System.out.println("Client chargé à partir du fichier client.json : \n" + client1Copie);
         System.out.println("Vérification de l'égalité entre les deux clients : " + client1.equals(client1Copie));
 
+        System.out.println("\n=== Test JsonAdresseRepository sauvegarder/charger ===");
+        JsonRepository<Adresse> repoAdresse = new JsonRepository<>("adresse.json",  Adresse.class);
+        repoAdresse.sauvegarder(adresse1Client1);
+        System.out.println("Adresse sauvegardée dans le fichier adresse.json");
+        Adresse adresse1Client1Copie = repoAdresse.charger();
+        System.out.println("Adresse chargée à partir du fichier adresse.json : \n" + adresse1Client1Copie);
+        System.out.println("Vérification de l'égalité entre les deux actions : " + adresse1Client1.equals(adresse1Client1Copie));
+
         // ==========================================================
         // TESTS COMPLETS
         // ==========================================================
