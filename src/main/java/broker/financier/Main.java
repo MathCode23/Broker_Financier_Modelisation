@@ -16,10 +16,7 @@ import broker.financier.model.actifs.ETF;
 import broker.financier.model.actifs.Obligation;
 import broker.financier.model.enveloppes.Enveloppe;
 import broker.financier.model.enveloppes.PEA;
-import broker.financier.persistance.ActionRepository;
-import broker.financier.persistance.ClientRepository;
-import broker.financier.persistance.JsonActionRepository;
-import broker.financier.persistance.JsonClientRepository;
+import broker.financier.persistance.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -125,7 +122,9 @@ public class Main {
         eclient1.afficherAnalysePortefeuille();
 
         System.out.println("\n=== Test JsonActionRepository sauvegarder/charger ===");
-        ActionRepository repoAction = new JsonActionRepository();
+        // ActionRepository repoAction = new JsonActionRepository();
+        // ActionRepositoryImpl repoAction = new ActionRepositoryImpl();
+        JsonRepository<Action> repoAction = new JsonRepository<>("action.json",  Action.class);
         repoAction.sauvegarder((Action) actionAirbus);
         System.out.println("Action sauvegardée dans le fichier action.json");
         Action actionAirbus3 = repoAction.charger();
