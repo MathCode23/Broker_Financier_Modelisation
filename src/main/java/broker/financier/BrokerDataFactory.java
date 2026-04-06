@@ -144,13 +144,13 @@ public final class BrokerDataFactory {
         return client;
     }
 
-    private static Position creerPosition(Actif actif, double quantite) {
+    public static Position creerPosition(Actif actif, double quantite) {
         Position position = new Position(quantite, actif, actif.getPrixCourant());
         position.setActif(actif);
         return position;
     }
 
-    private static void alimenterPositionsClient(Client client) {
+    public static void alimenterPositionsClient(Client client) {
         for (Enveloppe enveloppe : client.getEnveloppes()) {
             for (Position position : enveloppe.getPositions().values()) {
                 enveloppe.ajouterPosition(position);

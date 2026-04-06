@@ -1,9 +1,12 @@
 package broker.financier.model.achatvente;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@JsonPropertyOrder({"id", "tickerActif", "prixExecution", "montantTotal", "dateExecution"})
 public class Transaction {
     private String id;
     private String tickerActif;

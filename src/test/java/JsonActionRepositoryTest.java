@@ -52,6 +52,7 @@ public class JsonActionRepositoryTest {
     void testChargerCasNominalNaif() {
         String json = """
         {
+          "type" : "ACTION",
           "ticker": "AIR",
           "nom": "Airbus",
           "prixCourant": 145.20,

@@ -9,6 +9,7 @@ import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.achatvente.Position;
 import broker.financier.model.achatvente.Transaction;
 import broker.financier.model.actifs.Actif;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
         @JsonSubTypes.Type(value = AssuranceVie.class, name = "AV")
 })
 
+@JsonPropertyOrder({"numero", "dateOuverte", "fraisDepot", "transactions", "ordresEnCours", "positions"})
 public abstract class Enveloppe {
     private String numero;
     private LocalDateTime dateOuverte;

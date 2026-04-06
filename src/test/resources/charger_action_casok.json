@@ -1,4 +1,5 @@
 {
+	"type" : "ACTION",
 	"ticker":"AAPL",
 	"nom":"Apple",
 	"prixCourant":190.0,

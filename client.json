@@ -1,125 +1,80 @@
 {
+  "id" : 42,
+  "nom" : "Durand",
+  "prenom" : "Alice",
   "adresses" : [ {
-    "codePostal" : "42000",
-    "complement" : "Appartement 333",
-    "numeroRue" : "5",
-    "pays" : "France",
-    "rue" : "Rue des Fleurs"
+    "numeroRue" : "12",
+    "rue" : "Avenue des Lumières",
+    "complement" : "Bâtiment B",
+    "codePostal" : "69000",
+    "pays" : "France"
   } ],
   "enveloppes" : [ {
-    "type" : "PEA",
-    "dateOuverte" : "2026-04-06T10:01:56.6155585",
+    "type" : "CTO",
+    "numero" : "CTO-001",
+    "dateOuverte" : "2026-04-06T10:00:00",
     "fraisDepot" : 0.0,
-    "numero" : "123",
-    "ordresEnCours" : [ ],
+    "soldeEspeces" : 5000.0,
     "positions" : {
-      "OAT10" : {
-        "actif" : {
-          "type" : "OBLIGATION",
-          "ticker" : "OAT10",
-          "nom" : "Obligation État USA",
-          "prixCourant" : 100.0,
-          "pays" : "USA",
-          "devise" : "EUR",
-          "tauxInteret" : 10.0
-        },
-        "plusValueLatente" : 1500.0,
-        "prixAchatUnitaire" : 50.0,
-        "quantite" : 30.0,
-        "valeurCourante" : 3000.0
-      },
-      "AIR" : {
+      "MSFT" : {
         "actif" : {
           "type" : "ACTION",
-          "ticker" : "AIR",
-          "nom" : "Airbus",
-          "prixCourant" : 145.2,
-          "pays" : "France",
-          "devise" : "EUR"
+          "ticker" : "MSFT",
+          "nom" : "Microsoft",
+          "prixCourant" : 320.0,
+          "pays" : "USA",
+          "devise" : "USD"
         },
-        "plusValueLatente" : 903.9999999999998,
-        "prixAchatUnitaire" : 100.0,
-        "quantite" : 20.0,
-        "valeurCourante" : 2904.0
+        "quantite" : 10.0,
+        "prixAchatUnitaire" : 300.0,
+        "plusValueLatente" : 200.0,
+        "valeurCourante" : 3200.0
       },
-      "CAC40" : {
+      "FR10Y" : {
         "actif" : {
-          "type" : "ETF",
-          "ticker" : "CAC40",
-          "nom" : "Lyxor CAC40",
-          "prixCourant" : 32.5,
+          "type" : "OBLIGATION",
+          "ticker" : "FR10Y",
+          "nom" : "Obligation France 10 ans",
+          "prixCourant" : 98.5,
           "pays" : "France",
           "devise" : "EUR",
-          "pourcentageFrais" : 32.0,
-          "tailleFondsM" : 15000.0,
-          "typeDistribution" : "CAPITALISANT",
-          "typeReplication" : "PHYSIQUE"
+          "tauxInteret" : 3.2
         },
-        "plusValueLatente" : -875.0,
-        "prixAchatUnitaire" : 120.0,
-        "quantite" : 10.0,
-        "valeurCourante" : 325.0
+        "quantite" : 5.0,
+        "prixAchatUnitaire" : 450.0,
+        "plusValueLatente" : -50.0,
+        "valeurCourante" : 492.5
+      },
+      "WORLD" : {
+        "actif" : {
+          "type" : "ETF",
+          "ticker" : "WORLD",
+          "nom" : "Amundi MSCI World",
+          "prixCourant" : 450.0,
+          "pays" : "France",
+          "devise" : "EUR",
+          "pourcentageFrais" : 0.12,
+          "tailleFondsM" : 5000.0,
+          "typeDistribution" : "CAPITALISANT",
+          "typeReplication" : "SYNTHETIQUE"
+        },
+        "quantite" : 2.0,
+        "prixAchatUnitaire" : 900.0,
+        "plusValueLatente" : 0.0,
+        "valeurCourante" : 900.0
       }
     },
-    "positionsImportantes" : [ {
-      "actif" : {
-        "type" : "OBLIGATION",
-        "ticker" : "OAT10",
-        "nom" : "Obligation État USA",
-        "prixCourant" : 100.0,
-        "pays" : "USA",
-        "devise" : "EUR",
-        "tauxInteret" : 10.0
-      },
-      "plusValueLatente" : 1500.0,
-      "prixAchatUnitaire" : 50.0,
-      "quantite" : 30.0,
-      "valeurCourante" : 3000.0
-    }, {
-      "actif" : {
-        "type" : "ACTION",
-        "ticker" : "AIR",
-        "nom" : "Airbus",
-        "prixCourant" : 145.2,
-        "pays" : "France",
-        "devise" : "EUR"
-      },
-      "plusValueLatente" : 903.9999999999998,
-      "prixAchatUnitaire" : 100.0,
-      "quantite" : 20.0,
-      "valeurCourante" : 2904.0
-    } ],
-    "soldeEspeces" : 1000.0,
     "transactions" : [ {
-      "dateExecution" : "2026-04-06T10:01:56.7385765",
-      "id" : "d6e33562-1cfc-42fd-a03b-cf256c69dabf",
-      "montantTotal" : 1000.0,
-      "prixExecution" : 100.0,
-      "tickerActif" : "AIR"
+      "tickerActif" : "MSFT",
+      "prixExecution" : 320.0,
+      "montantTotal" : 3200.0,
+      "dateExecution" : "2026-04-06T10:00:00"
     }, {
-      "dateExecution" : "2026-04-06T10:01:56.7385765",
-      "id" : "2f145076-92f9-4fd4-bc75-3e7cc3bec7ee",
-      "montantTotal" : -1000.0,
-      "prixExecution" : -100.0,
-      "tickerActif" : "CAC40"
-    }, {
-      "dateExecution" : "2026-04-06T10:01:56.6256563",
-      "id" : "4698f8ee-2c46-460e-a006-1d2cb0cf8d95",
-      "montantTotal" : 300.0,
-      "prixExecution" : 100.0,
-      "tickerActif" : "1"
-    }, {
-      "dateExecution" : "2026-04-06T10:01:56.6893715",
-      "id" : "eb03eca7-5e20-4856-bc7f-939484535c1b",
-      "montantTotal" : 400.0,
-      "prixExecution" : 200.0,
-      "tickerActif" : "2"
-    } ],
-    "valeurTotaleBrute" : 7229.0,
-    "valeurTotaleBruteLambda" : 7229.0,
-    "valeurTotaleNette" : 3792.8940000000002
-  } ],
-  "id" : 1,
-  "nom" : "JULLIEN",
-  "prenom" : "Mathieu"
+      "tickerActif" : "WORLD",
+      "prixExecution" : -450.0,
+      "montantTotal" : -900.0,
+      "dateExecution" : "2026-04-06T10:00:00"
+    } ]
+  } ]
 }
+

@@ -3,10 +3,12 @@ package broker.financier.model.achatvente;
 import broker.financier.enums.Devise;
 import broker.financier.enums.TypeOrdre;
 import broker.financier.model.actifs.Actif;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@JsonPropertyOrder({"prixMinMax", "devise", "quantite", "type", "date", "actif"})
 public class Ordre {
     private double prixMinMax;
     private Devise devise;

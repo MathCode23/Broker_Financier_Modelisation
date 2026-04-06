@@ -1,9 +1,11 @@
 package broker.financier.model;
 
 import broker.financier.model.enveloppes.Enveloppe;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.*;
 
+@JsonPropertyOrder({"id", "nom", "prenom", "adresses", "enveloppes"})
 public class Client {
     private int id;
     private String nom;

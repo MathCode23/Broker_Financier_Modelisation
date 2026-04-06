@@ -1,9 +1,11 @@
 package broker.financier.model.achatvente;
 
 import broker.financier.model.actifs.Actif;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Objects;
 
+@JsonPropertyOrder({"quantite", "actif", "prixAchatUnitaire"})
 public class Position implements Valorisable {
     private double quantite;
     private Actif actif;

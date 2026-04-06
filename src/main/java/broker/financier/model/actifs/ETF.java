@@ -3,9 +3,11 @@ package broker.financier.model.actifs;
 import broker.financier.enums.Devise;
 import broker.financier.enums.TypeDistribution;
 import broker.financier.enums.TypeReplication;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Objects;
 
+@JsonPropertyOrder({"tailleFondsM", "pourcentageFrais", "typeDistribution", "typeReplication"})
 public class ETF extends Actif {
     private double tailleFondsM;
     private double pourcentageFrais;

@@ -1,7 +1,10 @@
 package broker.financier.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.Objects;
 
+@JsonPropertyOrder({"numeroRue", "rue", "complement", "codePostal", "pays"})
 public class Adresse {
     private String numeroRue;
     private String rue;
