@@ -73,7 +73,6 @@ public class JsonAdresseRepositoryTest {
         assertEquals(adresse, chargee);
     }
 
-
     private Path chargerFichierAttendu(String cheminRessource) throws URISyntaxException {
         URL resource = ClassLoader.getSystemResource(cheminRessource);
         assertNotNull(resource);
