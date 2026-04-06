@@ -145,7 +145,12 @@ public class Main {
         System.out.println("Adresse sauvegardée dans le fichier adresse.json");
         Adresse adresse1Client1Copie = repoAdresse.charger();
         System.out.println("Adresse chargée à partir du fichier adresse.json : \n" + adresse1Client1Copie);
-        System.out.println("Vérification de l'égalité entre les deux actions : " + adresse1Client1.equals(adresse1Client1Copie));
+        System.out.println("Vérification de l'égalité entre les deux adresses : " + adresse1Client1.equals(adresse1Client1Copie));
+        Adresse adresseLimite = new Adresse("20bis", "rue Dr Rémy", "Saint-Etienne", null, "France");
+        repoAdresse.sauvegarder(adresseLimite);
+        Adresse adresseLimiteCopie = repoAdresse.charger();
+        System.out.println("Adresse chargée à partir du fichier adresse.json : \n" + adresseLimiteCopie);
+        System.out.println("Vérification de l'égalité entre les deux adresses : " + adresseLimite.equals(adresseLimiteCopie));
 
         // ==========================================================
         // TESTS COMPLETS

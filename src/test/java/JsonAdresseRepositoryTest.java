@@ -53,6 +53,27 @@ public class JsonAdresseRepositoryTest {
         assertEquals(adresseAttendue, adresseChargee);
     }
 
+    @Test
+    void testChampNullAdresse() throws Exception {
+        JsonRepository<Adresse> repo = new JsonRepository<>("adresse.json", Adresse.class);
+
+        Adresse adresse = new Adresse("20bis", "rue Dr Rémy", "Saint-Etienne", null, "France");
+
+        // --- Sérialisation ---
+        repo.sauvegarder(adresse);
+
+        String contenu = Files.readString(Path.of("adresse.json"));
+
+        // Vérifie que le champ null apparaît bien dans le JSON
+        assertTrue(contenu.contains("\"codePostal\" : null"));
+
+        // --- Désérialisation ---
+        Adresse chargee = repo.charger();
+
+        assertEquals(adresse, chargee);
+    }
+
+
     private Path chargerFichierAttendu(String cheminRessource) throws URISyntaxException {
         URL resource = ClassLoader.getSystemResource(cheminRessource);
         assertNotNull(resource);
