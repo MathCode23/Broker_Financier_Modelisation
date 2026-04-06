@@ -2,8 +2,21 @@ package broker.financier.model.actifs;
 
 import broker.financier.enums.Devise;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.Objects;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Action.class, name = "ACTION"),
+        @JsonSubTypes.Type(value = ETF.class, name = "ETF"),
+        @JsonSubTypes.Type(value = Obligation.class, name = "OBLIGATION")
+})
 
 @JsonPropertyOrder({ "ticker", "nom", "prixCourant", "pays", "devise" })
 public abstract class Actif implements Vendable {

@@ -7,6 +7,10 @@ import java.util.Objects;
 public class Obligation extends Actif {
     private double tauxInteret;
 
+    public Obligation() {
+
+    }
+
     public Obligation(String ticker, String nom, double prixCourant, String pays, Devise devise, double tauxInteret) {
         super(ticker, nom, prixCourant, pays, devise);
         this.tauxInteret = tauxInteret;

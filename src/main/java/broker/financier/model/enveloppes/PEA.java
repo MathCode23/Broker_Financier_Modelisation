@@ -16,6 +16,10 @@ public class PEA extends Enveloppe {
     private static final double TAUX_FISCALITE_APRES_5_ANS = 0.186;
     private static final double FRAIS_DEPOT = 0.0;
 
+    public PEA() {
+        super();
+    }
+
     public PEA(String numero, LocalDateTime dateOuverte, double soldeEspeces) {
         super(numero, dateOuverte, soldeEspeces, FRAIS_DEPOT);
     }

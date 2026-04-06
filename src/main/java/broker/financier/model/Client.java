@@ -12,16 +12,16 @@ public class Client {
     private Set<Adresse> adresses;
     private List<Enveloppe> enveloppes;
 
-    private Client() {
-        this.adresses = new HashSet<>();
-        this.enveloppes = new ArrayList<>();
+    public Client() {
+
     }
 
     public Client(int id, String nom, String prenom) {
-        this();
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
+        this.adresses = new HashSet<>();
+        this.enveloppes = new ArrayList<>();
     }
 
     public int getId() {

@@ -12,6 +12,10 @@ public class ETF extends Actif {
     private TypeDistribution typeDistribution;
     private TypeReplication typeReplication;
 
+    public ETF() {
+
+    }
+
     public ETF(String ticker, String nom, double prixCourant, String pays, Devise devise, double tailleFondsM, double pourcentageFrais, TypeDistribution typeDistribution, TypeReplication typeReplication) {
         super(ticker, nom, prixCourant, pays, devise);
         this.tailleFondsM = tailleFondsM;

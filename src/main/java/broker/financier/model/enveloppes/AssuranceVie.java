@@ -7,6 +7,10 @@ public class AssuranceVie extends Enveloppe {
     private static final double ABATTEMENT_ANNUEL = 4600.0;
     private static final double FRAIS_DEPOT = 0.01;
 
+    public AssuranceVie() {
+        super();
+    }
+
     public AssuranceVie(String numero, LocalDateTime dateOuverte, double soldeEspeces) {
         super(numero, dateOuverte, soldeEspeces, FRAIS_DEPOT);
     }

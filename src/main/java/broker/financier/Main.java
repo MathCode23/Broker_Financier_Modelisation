@@ -17,7 +17,9 @@ import broker.financier.model.actifs.Obligation;
 import broker.financier.model.enveloppes.Enveloppe;
 import broker.financier.model.enveloppes.PEA;
 import broker.financier.persistance.ActionRepository;
+import broker.financier.persistance.ClientRepository;
 import broker.financier.persistance.JsonActionRepository;
+import broker.financier.persistance.JsonClientRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -125,9 +127,18 @@ public class Main {
         System.out.println("\n=== Test JsonActionRepository sauvegarder/charger ===");
         ActionRepository repoAction = new JsonActionRepository();
         repoAction.sauvegarder((Action) actionAirbus);
-        System.out.println("Action sauvegardée dans le fichier action.js");
+        System.out.println("Action sauvegardée dans le fichier action.json");
         Action actionAirbus3 = repoAction.charger();
-        System.out.println("Action chargée dans le fichier action.js : \n" + actionAirbus3);
+        System.out.println("Action chargée à partir du fichier action.json : \n" + actionAirbus3);
+        System.out.println("Vérification de l'égalité entre les deux actions : " + actionAirbus.equals(actionAirbus3));
+
+        System.out.println("\n=== Test JsonClientRepository sauvegarder/charger ===");
+        ClientRepository repoClient = new JsonClientRepository();
+        repoClient.sauvegarder(client1);
+        System.out.println("Client enregistré dans le fichier client.json");
+        Client client1Copie = repoClient.charger();
+        System.out.println("Client chargé à partir du fichier client.json : \n" + client1Copie);
+        System.out.println("Vérification de l'égalité entre les deux clients : " + client1.equals(client1Copie));
 
         // ==========================================================
         // TESTS COMPLETS

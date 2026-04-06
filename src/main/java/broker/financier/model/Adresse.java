@@ -9,6 +9,10 @@ public class Adresse {
     private String codePostal;
     private String pays;
 
+    public Adresse() {
+
+    }
+
     public Adresse(String numeroRue, String rue, String complement, String codePostal, String pays) {
         this.numeroRue = numeroRue;
         this.rue = rue;

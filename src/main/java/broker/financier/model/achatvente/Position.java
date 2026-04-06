@@ -9,6 +9,10 @@ public class Position implements Valorisable {
     private Actif actif;
     private double prixAchatUnitaire;
 
+    public Position() {
+
+    }
+
     public Position(double quantite, Actif actif, double prixAchatUnitaire) {
         this.quantite = quantite;
         this.actif = actif;

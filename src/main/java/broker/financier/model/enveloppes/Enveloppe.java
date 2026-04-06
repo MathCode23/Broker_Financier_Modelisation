@@ -9,11 +9,24 @@ import broker.financier.model.achatvente.Ordre;
 import broker.financier.model.achatvente.Position;
 import broker.financier.model.achatvente.Transaction;
 import broker.financier.model.actifs.Actif;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PEA.class, name = "PEA"),
+        @JsonSubTypes.Type(value = CTO.class, name = "CTO"),
+        @JsonSubTypes.Type(value = AssuranceVie.class, name = "AV")
+})
 
 public abstract class Enveloppe {
     private String numero;
@@ -25,18 +38,18 @@ public abstract class Enveloppe {
     private Queue<Ordre> ordresEnCours;
     private Map<String, Position> positions;
 
-    private Enveloppe() {
-        this.transactions = new ArrayList<>();
-        this.ordresEnCours = new LinkedList<>();
-        this.positions = new HashMap<>();
+    public Enveloppe() {
+
     }
 
     public Enveloppe(String numero, LocalDateTime dateOuverte, double soldeEspeces, double fraisDepot) {
-        this();
         this.numero = numero;
         this.dateOuverte = dateOuverte;
         this.soldeEspeces = soldeEspeces;
         this.fraisDepot = fraisDepot;
+        this.transactions = new ArrayList<>();
+        this.ordresEnCours = new LinkedList<>();
+        this.positions = new HashMap<>();
     }
 
     public String getNumero() {

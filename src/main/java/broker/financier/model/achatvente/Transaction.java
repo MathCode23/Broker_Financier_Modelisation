@@ -11,6 +11,10 @@ public class Transaction {
     private double montantTotal;
     private LocalDateTime dateExecution;
 
+    public Transaction() {
+
+    }
+
     public Transaction(String tickerActif, double prixExecution, double montantTotal, LocalDateTime dateExecution) {
         this.id = UUID.randomUUID().toString();
         this.tickerActif = tickerActif;

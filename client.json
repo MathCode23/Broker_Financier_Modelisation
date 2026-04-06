@@ -1,0 +1,125 @@
+{
+  "adresses" : [ {
+    "codePostal" : "42000",
+    "complement" : "Appartement 333",
+    "numeroRue" : "5",
+    "pays" : "France",
+    "rue" : "Rue des Fleurs"
+  } ],
+  "enveloppes" : [ {
+    "type" : "PEA",
+    "dateOuverte" : "2026-04-06T10:01:56.6155585",
+    "fraisDepot" : 0.0,
+    "numero" : "123",
+    "ordresEnCours" : [ ],
+    "positions" : {
+      "OAT10" : {
+        "actif" : {
+          "type" : "OBLIGATION",
+          "ticker" : "OAT10",
+          "nom" : "Obligation État USA",
+          "prixCourant" : 100.0,
+          "pays" : "USA",
+          "devise" : "EUR",
+          "tauxInteret" : 10.0
+        },
+        "plusValueLatente" : 1500.0,
+        "prixAchatUnitaire" : 50.0,
+        "quantite" : 30.0,
+        "valeurCourante" : 3000.0
+      },
+      "AIR" : {
+        "actif" : {
+          "type" : "ACTION",
+          "ticker" : "AIR",
+          "nom" : "Airbus",
+          "prixCourant" : 145.2,
+          "pays" : "France",
+          "devise" : "EUR"
+        },
+        "plusValueLatente" : 903.9999999999998,
+        "prixAchatUnitaire" : 100.0,
+        "quantite" : 20.0,
+        "valeurCourante" : 2904.0
+      },
+      "CAC40" : {
+        "actif" : {
+          "type" : "ETF",
+          "ticker" : "CAC40",
+          "nom" : "Lyxor CAC40",
+          "prixCourant" : 32.5,
+          "pays" : "France",
+          "devise" : "EUR",
+          "pourcentageFrais" : 32.0,
+          "tailleFondsM" : 15000.0,
+          "typeDistribution" : "CAPITALISANT",
+          "typeReplication" : "PHYSIQUE"
+        },
+        "plusValueLatente" : -875.0,
+        "prixAchatUnitaire" : 120.0,
+        "quantite" : 10.0,
+        "valeurCourante" : 325.0
+      }
+    },
+    "positionsImportantes" : [ {
+      "actif" : {
+        "type" : "OBLIGATION",
+        "ticker" : "OAT10",
+        "nom" : "Obligation État USA",
+        "prixCourant" : 100.0,
+        "pays" : "USA",
+        "devise" : "EUR",
+        "tauxInteret" : 10.0
+      },
+      "plusValueLatente" : 1500.0,
+      "prixAchatUnitaire" : 50.0,
+      "quantite" : 30.0,
+      "valeurCourante" : 3000.0
+    }, {
+      "actif" : {
+        "type" : "ACTION",
+        "ticker" : "AIR",
+        "nom" : "Airbus",
+        "prixCourant" : 145.2,
+        "pays" : "France",
+        "devise" : "EUR"
+      },
+      "plusValueLatente" : 903.9999999999998,
+      "prixAchatUnitaire" : 100.0,
+      "quantite" : 20.0,
+      "valeurCourante" : 2904.0
+    } ],
+    "soldeEspeces" : 1000.0,
+    "transactions" : [ {
+      "dateExecution" : "2026-04-06T10:01:56.7385765",
+      "id" : "d6e33562-1cfc-42fd-a03b-cf256c69dabf",
+      "montantTotal" : 1000.0,
+      "prixExecution" : 100.0,
+      "tickerActif" : "AIR"
+    }, {
+      "dateExecution" : "2026-04-06T10:01:56.7385765",
+      "id" : "2f145076-92f9-4fd4-bc75-3e7cc3bec7ee",
+      "montantTotal" : -1000.0,
+      "prixExecution" : -100.0,
+      "tickerActif" : "CAC40"
+    }, {
+      "dateExecution" : "2026-04-06T10:01:56.6256563",
+      "id" : "4698f8ee-2c46-460e-a006-1d2cb0cf8d95",
+      "montantTotal" : 300.0,
+      "prixExecution" : 100.0,
+      "tickerActif" : "1"
+    }, {
+      "dateExecution" : "2026-04-06T10:01:56.6893715",
+      "id" : "eb03eca7-5e20-4856-bc7f-939484535c1b",
+      "montantTotal" : 400.0,
+      "prixExecution" : 200.0,
+      "tickerActif" : "2"
+    } ],
+    "valeurTotaleBrute" : 7229.0,
+    "valeurTotaleBruteLambda" : 7229.0,
+    "valeurTotaleNette" : 3792.8940000000002
+  } ],
+  "id" : 1,
+  "nom" : "JULLIEN",
+  "prenom" : "Mathieu"
+}
